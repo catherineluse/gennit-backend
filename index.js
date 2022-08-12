@@ -34,6 +34,7 @@ const typeDefs = gql`
     placeId:               String
     isInPrivateResidence:  Boolean 
     cost:                  String
+    free:                  Boolean
     location:              Point
     canceled:              Boolean!
     deleted:               Boolean
@@ -177,6 +178,10 @@ neoSchema.assertIndexesAndConstraints({ options: { create: true } })
   .then(() => {
     const server = new ApolloServer({
       schema: neoSchema.schema,
+      context: params => () => {
+        console.log(`Query: ${params.req.body.query}`);
+        console.log(`Variables: ${JSON.stringify(params.req.body.variables, null, 2)}`);
+      }
     });
 
     server.listen().then(({ url }) => {
